@@ -342,6 +342,11 @@ jobs:
       # but we can run a little over that limit.
     steps:
       - checkout
+      - run:
+          command: |
+            sudo rm -rf /usr/local/go
+            wget https://dl.google.com/go/go${GO_VERSION}.linux-arm64.tar.gz
+            sudo tar -C /usr/local -xzvf go${GO_VERSION}.linux-arm64.tar.gz
       - run: uname -m
       - run: go mod download
       - run: *install-gotestsum
