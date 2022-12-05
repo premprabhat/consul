@@ -344,6 +344,7 @@ jobs:
       - checkout
       - run: uname -m
       - run: go mod download
+      - run: *install-gotestsum
       - run:
           name: go test -race
           command: |
@@ -380,7 +381,6 @@ jobs:
     steps:
       - checkout
       - run: go mod download
-      - run: *install-gotestsum
       - run:
           name: go test -race
           command: |
