@@ -42,6 +42,13 @@ references:
     yarn: &YARN_CACHE_KEY consul-ui-v9-{{ checksum "ui/yarn.lock" }}
 
 steps:
+  install-go-arm64: &install-go-arm64
+    name: install go
+    command: |
+      sudo rm -rf /usr/local/go
+      wget https://dl.google.com/go/go${GO_VERSION}.linux-arm64.tar.gz
+      sudo tar -C /usr/local -xzvf go${GO_VERSION}.linux-arm64.tar.gz
+
   install-gotestsum: &install-gotestsum
     name: install gotestsum
     environment:
@@ -342,11 +349,7 @@ jobs:
       # but we can run a little over that limit.
     steps:
       - checkout
-      - run:
-          command: |
-            sudo rm -rf /usr/local/go
-            wget https://dl.google.com/go/go${GO_VERSION}.linux-arm64.tar.gz
-            sudo tar -C /usr/local -xzvf go${GO_VERSION}.linux-arm64.tar.gz
+      - *install-go-arm64
       - run: uname -m
       - run: go mod download
       - run: *install-gotestsum
