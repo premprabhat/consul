@@ -1131,5 +1131,6 @@ workflows:
           go-version: "1.19"
           <<: *filter-ignore-non-go-branches
       - go-test-race: *filter-ignore-non-go-branches
+      - go-test-race-arm64: *filter-ignore-non-go-branches
       - go-test-32bit: *filter-ignore-non-go-branches
       - noop
