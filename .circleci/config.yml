@@ -349,7 +349,7 @@ jobs:
       # but we can run a little over that limit.
     steps:
       - checkout
-      - *install-go-arm64
+      - run: *install-go-arm64
       - run: uname -m
       - run: go mod download
       - run: *install-gotestsum
