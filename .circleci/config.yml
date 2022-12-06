@@ -1173,7 +1173,7 @@ workflows:
           name: "go-test-api go1.18"
           path: api
           go-version: "1.18"
-          requires: [dev-build-arm64]
+          requires: [dev-build]
       - go-test-lib-arm64:
           name: "go-test-api go1.18"
           path: api
