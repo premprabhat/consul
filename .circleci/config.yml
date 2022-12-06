@@ -506,6 +506,8 @@ jobs:
       - attach_workspace:
           at: /home/circleci/go/bin
       - run:
+          command: go version
+      - run:
           working_directory: <<parameters.path>>
           command: go mod download
       - run:
@@ -640,6 +642,7 @@ jobs:
       - run:
           name: Build
           command: |
+            go version
             make dev
             mkdir -p /home/circleci/go/bin
             cp ./bin/consul /home/circleci/go/bin/consul
