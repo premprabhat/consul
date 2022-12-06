@@ -457,8 +457,9 @@ jobs:
         type: string
       path:
         type: string
-    docker:
-      - image: "docker.mirror.hashicorp.services/cimg/go:<<parameters.go-version>>"
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
     environment:
       <<: *ENVIRONMENT
       GOTAGS: "" # No tags for OSS but there are for enterprise
