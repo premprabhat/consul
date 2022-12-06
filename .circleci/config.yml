@@ -1169,6 +1169,7 @@ workflows:
                 - /^backport\/docs\/.*/
                 - /^backport\/ui\/.*/
       - dev-build-arm64: *filter-ignore-non-go-branches
+      - dev-build: *filter-ignore-non-go-branches
       - go-test-lib:
           name: "go-test-api go1.18"
           path: api
