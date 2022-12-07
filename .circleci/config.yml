@@ -475,9 +475,8 @@ jobs:
           working_directory: <<parameters.path>>
           name: Set Consul Path
           command: |
-            sudo find / -name "consul"
-            export PATH=$PATH:/home/circleci/bin/consul
-            ls -l /home/circleci/bin/consul
+            export PATH=$PATH:/home/circleci/go/bin/
+            ls -l /home/circleci/go/bin/consul
       - run:
           working_directory: <<parameters.path>>
           name: go test
