@@ -476,11 +476,13 @@ jobs:
           name: Set Consul Path
           command: |
             export PATH=$PATH:/home/circleci/go/bin/
+            echo $PATH
             ls -l /home/circleci/go/bin/consul
       - run:
           working_directory: <<parameters.path>>
           name: go test
           command: |
+            export PATH=/home/circleci/go/bin/:$PATH
             echo $PATH
             mkdir -p $TEST_RESULTS_DIR /tmp/jsonfile
             gotestsum \
