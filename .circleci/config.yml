@@ -473,10 +473,9 @@ jobs:
       - run: *install-gotestsum
       - run:
           working_directory: <<parameters.path>>
+          name: Set Consul Path
           command: |
-            sudo apt-get install file -y
-            file /home/circleci/bin/consul
-            sudo find / -name "consul"
+            export PATH=/home/circleci/bin:$PATH
       - run:
           working_directory: <<parameters.path>>
           name: go test
