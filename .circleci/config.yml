@@ -475,7 +475,7 @@ jobs:
           working_directory: <<parameters.path>>
           name: Set Consul Path
           command: |
-            find / -name "consul"
+            sudo find / -name "consul"
             export PATH=$PATH:/home/circleci/bin/consul
             ls -l /home/circleci/bin/consul
       - run:
