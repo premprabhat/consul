@@ -473,6 +473,12 @@ jobs:
       - run: *install-gotestsum
       - run:
           working_directory: <<parameters.path>>
+          command: |
+            sudo apt-get install file -y
+            file /home/circleci/bin/consul
+            sudo find / -name "consul"
+      - run:
+          working_directory: <<parameters.path>>
           name: go test
           command: |
             mkdir -p $TEST_RESULTS_DIR /tmp/jsonfile
