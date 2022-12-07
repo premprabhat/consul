@@ -473,17 +473,8 @@ jobs:
       - run: *install-gotestsum
       - run:
           working_directory: <<parameters.path>>
-          name: Set Consul Path
-          command: |
-            export PATH=$PATH:/home/circleci/go/bin/
-            echo $PATH
-            ls -l /home/circleci/go/bin/consul
-      - run:
-          working_directory: <<parameters.path>>
           name: go test
           command: |
-            export PATH=/home/circleci/go/bin/:$PATH
-            echo $PATH
             mkdir -p $TEST_RESULTS_DIR /tmp/jsonfile
             gotestsum \
               --format=short-verbose \
@@ -658,7 +649,7 @@ jobs:
             go version
             make dev
             mkdir -p /home/circleci/go/bin
-            cp ./bin/consul /home/circleci/go/bin/consul
+            cp ./bin/consul /usr/local/bin/consul
 
       # save dev build to pass to downstream jobs
       - persist_to_workspace:
