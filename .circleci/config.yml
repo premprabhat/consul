@@ -470,6 +470,7 @@ jobs:
       - run:
           working_directory: <<parameters.path>>
           command: go mod download
+      - run: *install-gotestsum
       - run:
           working_directory: <<parameters.path>>
           name: go test
