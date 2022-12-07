@@ -615,6 +615,7 @@ jobs:
       - checkout
       - attach_workspace: # this normally runs as the first job and has nothing to attach; only used in main branch after rebuilding UI
           at: .
+      - run: *install-go-arm64
       - run:
           name: Build
           command: |
