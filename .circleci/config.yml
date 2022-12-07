@@ -475,11 +475,13 @@ jobs:
           working_directory: <<parameters.path>>
           name: Set Consul Path
           command: |
-            export PATH=/home/circleci/bin:$PATH
+            export PATH=$PATH:/home/circleci/bin/consul
+            ls -l /home/circleci/bin/consul
       - run:
           working_directory: <<parameters.path>>
           name: go test
           command: |
+            echo $PATH
             mkdir -p $TEST_RESULTS_DIR /tmp/jsonfile
             gotestsum \
               --format=short-verbose \
