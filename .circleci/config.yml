@@ -508,8 +508,6 @@ jobs:
       - attach_workspace:
           at: /home/circleci/go/bin
       - run:
-          command: go version
-      - run:
           working_directory: <<parameters.path>>
           command: go mod download
       - run:
