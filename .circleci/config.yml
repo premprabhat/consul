@@ -622,9 +622,7 @@ jobs:
           command: |
             make dev
             mkdir -p /home/circleci/go/bin
-            cp ./bin/consul /home/circleci/go/bin/consul
-            sudo apt-get install file -y
-            file /home/circleci/go/bin/consul
+            sudo cp ./bin/consul /usr/local/bin/consul
 
       # save dev build to pass to downstream jobs
       - persist_to_workspace:
@@ -649,7 +647,7 @@ jobs:
             go version
             make dev
             mkdir -p /home/circleci/go/bin
-            cp ./bin/consul /usr/local/bin/consul
+            cp ./bin/consul /home/circleci/go/bin/consul
 
       # save dev build to pass to downstream jobs
       - persist_to_workspace:
