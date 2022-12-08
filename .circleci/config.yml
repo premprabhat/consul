@@ -475,7 +475,7 @@ jobs:
           working_directory: <<parameters.path>>
           name: go test
           command: |
-            export PATH=/home/circleci/go/bin/consul:$PATH
+            export PATH=/home/circleci/go/bin/:$PATH
             mkdir -p $TEST_RESULTS_DIR /tmp/jsonfile
             gotestsum \
               --format=short-verbose \
