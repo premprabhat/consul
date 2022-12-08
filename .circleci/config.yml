@@ -1279,8 +1279,11 @@ workflows:
       - lint-consul-retry-arm64: *filter-ignore-non-go-branches
       - lint: *filter-ignore-non-go-branches
       - lint-arm64: *filter-ignore-non-go-branches
+      - go-test-arm64: *filter-ignore-non-go-branches
       - dev-build-arm64: *filter-ignore-non-go-branches
       - dev-build: *filter-ignore-non-go-branches
+      - go-test-arm64:
+          requires: [dev-build-arm64]
       - go-test-lib:
           name: "go-test-api go1.18"
           path: api
