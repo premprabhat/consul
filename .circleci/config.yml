@@ -1189,6 +1189,7 @@ jobs:
             sudo unzip -d /usr/local/bin /tmp/vault.zip
             rm -rf /tmp/vault*
       - checkout
+      - run: *install-gotestsum
       - run: go mod download
       - run:
           name: go test
