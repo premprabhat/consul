@@ -1182,8 +1182,38 @@ workflows:
           go-version: "1.18"
           requires: [dev-build]
       - go-test-lib-arm64:
-          name: "go-test-api go1.18"
+          name: "go-test-api go1.18 arm64"
           path: api
           go-version: "1.18"
           requires: [dev-build-arm64]
+      - go-test-lib:
+          name: "go-test-api go1.19"
+          path: api
+          go-version: "1.19"
+          requires: [ dev-build ]
+      - go-test-lib-arm64:
+          name: "go-test-api go1.19 arm64"
+          path: api
+          go-version: "1.19"
+          requires: [ dev-build-arm64 ]
+      - go-test-lib-arm64:
+          name: "go-test-sdk go1.18 arm64"
+          path: sdk
+          go-version: "1.18"
+          <<: *filter-ignore-non-go-branches
+      - go-test-lib:
+          name: "go-test-sdk go1.18"
+          path: sdk
+          go-version: "1.18"
+          <<: *filter-ignore-non-go-branches
+      - go-test-lib:
+          name: "go-test-sdk go1.19"
+          path: sdk
+          go-version: "1.19"
+          <<: *filter-ignore-non-go-branches
+      - go-test-lib-arm64:
+          name: "go-test-sdk go1.19 arm64"
+          path: sdk
+          go-version: "1.19"
+          <<: *filter-ignore-non-go-branches
       - noop
