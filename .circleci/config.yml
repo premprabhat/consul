@@ -185,9 +185,27 @@ jobs:
       - run: go install github.com/hashicorp/lint-consul-retry@master && lint-consul-retry
       - run: *notify-slack-failure
 
+  lint-consul-retry-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    steps:
+      - checkout
+      - run: go install github.com/hashicorp/lint-consul-retry@master && lint-consul-retry
+      - run: *notify-slack-failure
+  
   lint-enums:
     docker:
       - image: *GOLANG_IMAGE
+    steps:
+      - checkout
+      - run: go install github.com/reillywatson/enumcover/cmd/enumcover@master && enumcover ./...
+      - run: *notify-slack-failure
+
+  lint-enums-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
     steps:
       - checkout
       - run: go install github.com/reillywatson/enumcover/cmd/enumcover@master && enumcover ./...
@@ -202,6 +220,39 @@ jobs:
     docker:
       - image: *GOLANG_IMAGE
     resource_class: xlarge
+    environment:
+      GOTAGS: "" # No tags for OSS but there are for enterprise
+      GOARCH: "<<parameters.go-arch>>"
+    steps:
+      - checkout
+      - run: go env
+      - run:
+          name: Install golangci-lint
+          command: make lint-tools
+      - run: go mod download
+      - run:
+          name: lint
+          command: &lintcmd |
+            golangci-lint run --build-tags="$GOTAGS" -v
+      - run:
+          name: lint api
+          working_directory: api
+          command: *lintcmd
+      - run:
+          name: lint sdk
+          working_directory: sdk
+          command: *lintcmd
+      - run: *notify-slack-failure
+
+  lint-arm64:
+    description: "Run golangci-lint on arm64"
+    parameters:
+      go-arch:
+        type: string
+        default: ""
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
     environment:
       GOTAGS: "" # No tags for OSS but there are for enterprise
       GOARCH: "<<parameters.go-arch>>"
@@ -268,9 +319,57 @@ jobs:
           name: "Protobuf Lint"
           command: make proto-lint
 
+  check-generated-protobuf-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    environment:
+      <<: *ENVIRONMENT
+      # tput complains if this isn't set to something.
+      TERM: ansi
+    steps:
+      - checkout
+      - run:
+          name: Install protobuf
+          command: make proto-tools
+      - run:
+          name: "Protobuf Format"
+          command: make proto-format
+      - run:
+          command: make --always-make proto
+      - run: |
+          if ! git diff --exit-code; then
+            echo "Generated code was not updated correctly"
+            exit 1
+          fi
+      - run:
+          name: "Protobuf Lint"
+          command: make proto-lint
+
   check-generated-deep-copy:
     docker:
       - image: *GOLANG_IMAGE
+    environment:
+      <<: *ENVIRONMENT
+      # tput complains if this isn't set to something.
+      TERM: ansi
+    steps:
+      - checkout
+      - run:
+          name: Install deep-copy
+          command: make codegen-tools
+      - run:
+          command: make --always-make deep-copy
+      - run: |
+          if ! git diff --exit-code; then
+            echo "Generated code was not updated correctly"
+            exit 1
+          fi
+
+  check-generated-deep-copy-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
     environment:
       <<: *ENVIRONMENT
       # tput complains if this isn't set to something.
@@ -1172,6 +1271,16 @@ workflows:
                 - /^ui\/.*/
                 - /^backport\/docs\/.*/
                 - /^backport\/ui\/.*/
+      - check-generated-protobuf: *filter-ignore-non-go-branches
+      - check-generated-protobuf-arm64: *filter-ignore-non-go-branches
+      - check-generated-deep-copy: *filter-ignore-non-go-branches
+      - check-generated-deep-copy-arm64: *filter-ignore-non-go-branches
+      - lint-enums: *filter-ignore-non-go-branches
+      - lint-enums-arm64: *filter-ignore-non-go-branches
+      - lint-consul-retry: *filter-ignore-non-go-branches
+      - lint-consul-retry-arm64: *filter-ignore-non-go-branches
+      - lint: *filter-ignore-non-go-branches
+      - lint-arm64: *filter-ignore-non-go-branches
       - dev-build-arm64: *filter-ignore-non-go-branches
       - dev-build: *filter-ignore-non-go-branches
       - go-test-lib:
