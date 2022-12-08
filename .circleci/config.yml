@@ -189,6 +189,8 @@ jobs:
     machine:
       image: *UBUNTU_CI_IMAGE
     resource_class: arm.large
+    environment:
+      <<: *ENVIRONMENT
     steps:
       - checkout
       - run: *install-go-arm64
@@ -207,6 +209,8 @@ jobs:
     machine:
       image: *UBUNTU_CI_IMAGE
     resource_class: arm.large
+    environment:
+      <<: *ENVIRONMENT
     steps:
       - checkout
       - run: *install-go-arm64
@@ -256,6 +260,7 @@ jobs:
       image: *UBUNTU_CI_IMAGE
     resource_class: arm.large
     environment:
+      <<: *ENVIRONMENT
       GOTAGS: "" # No tags for OSS but there are for enterprise
       GOARCH: "<<parameters.go-arch>>"
     steps:
