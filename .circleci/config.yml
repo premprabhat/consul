@@ -1175,6 +1175,30 @@ jobs:
           path: *TEST_RESULTS_DIR
       - run: *notify-slack-failure
 
+  test-connect-ca-providers-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    environment:
+      <<: *ENVIRONMENT
+    steps:
+      - run:
+          name: Install vault
+          command: |
+            wget -q -O /tmp/vault.zip https://releases.hashicorp.com/vault/${VAULT_BINARY_VERSION}/vault_${VAULT_BINARY_VERSION}_linux_arm64.zip
+            sudo unzip -d /usr/local/bin /tmp/vault.zip
+            rm -rf /tmp/vault*
+      - checkout
+      - run: go mod download
+      - run:
+          name: go test
+          command: |
+            mkdir -p $TEST_RESULTS_DIR
+            make test-connect-ca-providers
+      - store_test_results:
+          path: *TEST_RESULTS_DIR
+      - run: *notify-slack-failure
+
   # Run load tests against a commit
   load-test:
     docker:
@@ -1284,6 +1308,8 @@ workflows:
       - lint-consul-retry-arm64: *filter-ignore-non-go-branches
       - lint: *filter-ignore-non-go-branches
       - lint-arm64: *filter-ignore-non-go-branches
+      - test-connect-ca-providers: *filter-ignore-non-go-branches
+      - test-connect-ca-providers-arm64: *filter-ignore-non-go-branches
       - go-test-arm64: *filter-ignore-non-go-branches
       - dev-build-arm64: *filter-ignore-non-go-branches
       - dev-build: *filter-ignore-non-go-branches
