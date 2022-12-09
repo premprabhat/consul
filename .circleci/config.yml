@@ -834,6 +834,7 @@ jobs:
       - run:
           name: go test
           command: |
+            export PATH=/home/circleci/go/bin/:$PATH
             mkdir -p $TEST_RESULTS_DIR
             gotestsum \
               --format=short-verbose \
