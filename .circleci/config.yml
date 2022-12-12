@@ -1144,6 +1144,60 @@ jobs:
           path: *TEST_RESULTS_DIR
       - run: *notify-slack-failure
 
+  compatibility-integration-test-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+      docker_layer_caching: true
+    resource_class: arm.large
+    parallelism: 1
+    steps:
+      - checkout
+      # Get go binary from workspace
+      - attach_workspace:
+          at: .
+      # Build the consul:local image from the already built binary
+      - run:
+          command: |
+            sudo rm -rf /usr/local/go
+            wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
+            sudo tar -C /usr/local -xzvf go${GO_VERSION}.linux-amd64.tar.gz
+          environment:
+            <<: *ENVIRONMENT
+      - run: *install-gotestsum
+      - run: docker build -t consul:local -f ./build-support/docker/Consul-Dev.dockerfile .
+      - run:
+          name: Compatibility Integration Tests
+          command: |
+            mkdir -p /tmp/test-results/
+            cd ./test/integration/consul-container
+            docker run --rm consul:local consul version
+            gotestsum \
+              --format=short-verbose \
+              --debug \
+              --rerun-fails=3 \
+              --packages="./..." \
+              -- \
+              -timeout=30m \
+              ./... \
+              --target-version local \
+              --latest-version latest
+            ls -lrt
+          environment:
+            # this is needed because of incompatibility between RYUK container and circleci
+            GOTESTSUM_JUNITFILE: /tmp/test-results/results.xml
+            GOTESTSUM_FORMAT: standard-verbose
+            COMPOSE_INTERACTIVE_NO_CLI: 1
+            # tput complains if this isn't set to something.
+            TERM: ansi
+      - store_artifacts:
+          path: ./test/integration/consul-container/test/upgrade/workdir/logs
+          destination: container-logs
+      - store_test_results:
+          path: *TEST_RESULTS_DIR
+      - store_artifacts:
+          path: *TEST_RESULTS_DIR
+      - run: *notify-slack-failure
+      
   envoy-integration-test: &ENVOY_TESTS
     machine:
       image: *UBUNTU_CI_IMAGE
