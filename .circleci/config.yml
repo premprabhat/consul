@@ -918,6 +918,28 @@ jobs:
             - ui/packages/consul-ui/node_modules
       - run: *notify-slack-failure
 
+  frontend-cache-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    steps:
+      - checkout
+
+      # cache yarn deps
+      - restore_cache:
+          key: *YARN_CACHE_KEY
+
+      - run:
+          name: install yarn packages
+          command: cd ui && make deps
+
+      - save_cache:
+          key: *YARN_CACHE_KEY
+          paths:
+            - ui/node_modules
+            - ui/packages/consul-ui/node_modules
+      - run: *notify-slack-failure
+
   # build ember so frontend tests run faster
   ember-build-oss: &ember-build-oss
     docker:
@@ -1512,4 +1534,4 @@ workflows:
             - frontend-cache
       - workspace-tests-arm64:
           requires:
-            - frontend-cache
+            - frontend-cache-arm64
