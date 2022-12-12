@@ -1529,6 +1529,13 @@ workflows:
                 - main
                 - /^ui\/.*/
                 - /^backport\/ui\/.*/
+      - frontend-cache-arm64:
+          filters:
+            branches:
+              only:
+                - main
+                - /^ui\/.*/
+                - /^backport\/ui\/.*/
       - workspace-tests:
           requires:
             - frontend-cache
