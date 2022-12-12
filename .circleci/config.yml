@@ -1481,5 +1481,20 @@ workflows:
       - compatibility-integration-test-arm64:
           requires:
             - dev-build-arm64
-
       - noop
+  frontend:
+    unless: << pipeline.parameters.trigger-load-test >>
+    jobs:
+      - frontend-cache:
+          filters:
+            branches:
+              only:
+                - main
+                - /^ui\/.*/
+                - /^backport\/ui\/.*/
+      - workspace-tests:
+          requires:
+            - frontend-cache
+      - workspace-tests-arm64:
+          requires:
+            - frontend-cache
