@@ -868,6 +868,8 @@ jobs:
       - attach_workspace:
           at: /home/circleci/go/bin
 
+      - run: *install-go-arm64
+      
       # make dev build of nomad
       - run:
           command: make pkg/linux_arm64/nomad
