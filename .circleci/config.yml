@@ -1031,6 +1031,21 @@ jobs:
           working_directory: ui
           command: make test-workspace
       - run: *notify-slack-failure
+  # run yarn workspace wide checks/tests
+  workspace-tests-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    steps:
+      - checkout
+      - restore_cache:
+          key: *YARN_CACHE_KEY
+      - attach_workspace:
+          at: ui
+      - run:
+          working_directory: ui
+          command: make test-workspace
+      - run: *notify-slack-failure
 
   # run ember frontend tests
   ember-test-oss:
