@@ -1204,7 +1204,6 @@ jobs:
       image: *UBUNTU_CI_IMAGE
       resource_class: arm.large
     parallelism: 4
-    resource_class: medium
     parameters:
       envoy-version:
         type: enum
