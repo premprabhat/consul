@@ -1366,5 +1366,19 @@ workflows:
           matrix:
             parameters:
               nomad-version: *supported_nomad_versions
+      - envoy-integration-test:
+          requires:
+            - dev-build
+          matrix:
+            parameters:
+              envoy-version: *supported_envoy_versions
+              xds-target: ["server", "client"]
+      - envoy-integration-test-arm64:
+          requires:
+            - dev-build-arm64
+          matrix:
+            parameters:
+              envoy-version: *supported_envoy_versions
+              xds-target: ["server", "client"]
 
       - noop
