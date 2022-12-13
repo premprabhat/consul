@@ -49,6 +49,13 @@ steps:
       wget https://dl.google.com/go/go${GO_VERSION}.linux-arm64.tar.gz
       sudo tar -C /usr/local -xzvf go${GO_VERSION}.linux-arm64.tar.gz
 
+  install-node-arm64: &install-node-arm64
+    name: install node
+    command: |
+      wget https://nodejs.org/dist/v14.0.0/node-v14.0.0-linux-arm64.tar.xz
+      tar -xf node-v14.0.0-linux-arm64.tar.xz
+      sudo cp -r node-v14.0.0-linux-arm64/bin/node /usr/local/bin
+
   install-gotestsum: &install-gotestsum
     name: install gotestsum
     environment:
@@ -971,6 +978,7 @@ jobs:
       - checkout
       - restore_cache:
           key: *YARN_CACHE_KEY
+      - run: *install-node-arm64
       - run: cd ui/packages/consul-ui && make build-ci
 
       # saves the build to a workspace to be passed to a downstream job
@@ -1069,12 +1077,7 @@ jobs:
           key: *YARN_CACHE_KEY
       - attach_workspace:
           at: ui
-      - run:
-          working_directory: ui
-          command: |
-               wget https://nodejs.org/dist/v14.0.0/node-v14.0.0-linux-arm64.tar.xz
-               tar -xf node-v14.0.0-linux-arm64.tar.xz
-               sudo cp -r node-v14.0.0-linux-arm64/bin/node /usr/local/bin
+      - run: *install-node-arm64
       - run:
           working_directory: ui/packages/consul-ui
           command: |
@@ -1106,20 +1109,7 @@ jobs:
           key: *YARN_CACHE_KEY
       - attach_workspace:
           at: ui
-      - run:
-          working_directory: ui
-          command: |
-               pwd
-               echo $PATH
-               #sudo rm -rf /opt/circleci/.nvm/versions/node
-               #sudo rm -rf /opt/circleci/.nvm/versions/node/v16.13.2
-               #whereis node
-               wget https://nodejs.org/dist/v14.0.0/node-v14.0.0-linux-arm64.tar.xz
-               tar -xf node-v14.0.0-linux-arm64.tar.xz
-               sudo cp -r node-v14.0.0-linux-arm64/bin/node /usr/local/bin
-               export PATH=/usr/local/bin:$PATH
-               node -v
-               pwd
+      - run: *install-node-arm64
       - run:
           working_directory: ui
           command: |
