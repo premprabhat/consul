@@ -1039,6 +1039,20 @@ jobs:
           working_directory: ui/packages/consul-ui
           command: make test-node
       - run: *notify-slack-failure
+  node-tests-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    steps:
+      - checkout
+      - restore_cache:
+          key: *YARN_CACHE_KEY
+      - attach_workspace:
+          at: ui
+      - run:
+          working_directory: ui/packages/consul-ui
+          command: make test-node
+      - run: *notify-slack-failure
   # run yarn workspace wide checks/tests
   workspace-tests:
     docker:
@@ -1533,5 +1547,11 @@ workflows:
           requires:
             - frontend-cache
       - workspace-tests-arm64:
+          requires:
+            - frontend-cache-arm64
+      - node-tests:
+          requires:
+            - frontend-cache
+      - node-tests-arm64:
           requires:
             - frontend-cache-arm64
