@@ -1073,7 +1073,7 @@ jobs:
                whereis node
                wget https://nodejs.org/dist/v14.0.0/node-v14.0.0-linux-arm64.tar.xz
                tar -xvf node-v14.0.0-linux-arm64.tar.xz
-               sudo cp node-v14.0.0-linux-arm64/bin/node /usr/local/bin
+               sudo cp node-v14.0.0-linux-arm64/ /opt/circleci/.nvm/versions/node/v14.0.0
                node -v
                pwd
       - run:
