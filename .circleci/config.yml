@@ -979,7 +979,9 @@ jobs:
       - restore_cache:
           key: *YARN_CACHE_KEY
       - run: *install-node-arm64
-      - run: cd ui/packages/consul-ui && make build-ci
+      - run: |
+          export PATH=/usr/local/bin:$PATH
+          cd ui/packages/consul-ui && make build-ci
 
       # saves the build to a workspace to be passed to a downstream job
       - persist_to_workspace:
