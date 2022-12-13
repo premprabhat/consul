@@ -1068,6 +1068,7 @@ jobs:
           working_directory: ui
           command: |
                pwd
+               echo $PATH
                #sudo rm -rf /opt/circleci/.nvm/versions/node
                sudo rm -rf /opt/circleci/.nvm/versions/node/v16.13.2
                whereis node
