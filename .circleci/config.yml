@@ -1509,7 +1509,7 @@ workflows:
                 - /^backport\/docs\/.*/
                 - /^backport\/ui\/.*/
       - noop
-    frontend:
+  frontend:
     unless: << pipeline.parameters.trigger-load-test >>
     jobs:
       - frontend-cache:
