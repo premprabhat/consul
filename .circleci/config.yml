@@ -1130,6 +1130,27 @@ jobs:
           path: ui/packages/consul-ui/test-results
       - run: *notify-slack-failure
 
+  ember-test-oss-arm64:
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    environment:
+      EMBER_TEST_REPORT: test-results/report-oss.xml #outputs test report for CircleCI test summary
+      EMBER_TEST_PARALLEL: true #enables test parallelization with ember-exam
+      CONSUL_NSPACES_ENABLED: 0
+    parallelism: 4
+    steps:
+      - checkout
+      - restore_cache:
+          key: *YARN_CACHE_KEY
+      - attach_workspace:
+          at: ui
+      - run:
+          working_directory: ui/packages/consul-ui
+          command: node_modules/.bin/ember exam --split=$CIRCLE_NODE_TOTAL --partition=`expr $CIRCLE_NODE_INDEX + 1` --path dist --silent -r xunit
+      - store_test_results:
+          path: ui/packages/consul-ui/test-results
+      - run: *notify-slack-failure
   # run ember frontend tests
   ember-test-ent:
     docker:
@@ -1561,5 +1582,11 @@ workflows:
           requires:
             - frontend-cache
       - node-tests-arm64:
+          requires:
+            - frontend-cache-arm64
+      - ember-build-oss:
+          requires:
+            - frontend-cache
+      - ember-build-oss-arm64:
           requires:
             - frontend-cache-arm64
