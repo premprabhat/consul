@@ -1067,6 +1067,7 @@ jobs:
       - run:
           working_directory: ui
           command: |
+               pwd
                #sudo rm -rf /opt/circleci/.nvm/versions/node
                sudo rm -rf /opt/circleci/.nvm/versions/node/v16.13.2
                whereis node
@@ -1074,9 +1075,12 @@ jobs:
                tar -xvf node-v14.0.0-linux-arm64.tar.xz
                sudo cp node-v14.0.0-linux-arm64/bin/node /usr/local/bin
                node -v
+               pwd
       - run:
           working_directory: ui
-          command: make test-workspace
+          command: |
+                pwd
+                make test-workspace
       - run: *notify-slack-failure
 
   # run ember frontend tests
