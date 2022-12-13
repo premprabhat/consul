@@ -960,6 +960,26 @@ jobs:
             - packages/consul-ui/dist
       - run: *notify-slack-failure
 
+  ember-build-oss-arm64: &ember-build-oss-arm64
+    machine:
+      image: *UBUNTU_CI_IMAGE
+    resource_class: arm.large
+    environment:
+      JOBS: 2 # limit parallelism for broccoli-babel-transpiler
+      CONSUL_NSPACES_ENABLED: 0
+    steps:
+      - checkout
+      - restore_cache:
+          key: *YARN_CACHE_KEY
+      - run: cd ui/packages/consul-ui && make build-ci
+
+      # saves the build to a workspace to be passed to a downstream job
+      - persist_to_workspace:
+          root: ui
+          paths:
+            - packages/consul-ui/dist
+      - run: *notify-slack-failure
+
   # build ember so frontend tests run faster
   ember-build-ent:
     <<: *ember-build-oss
