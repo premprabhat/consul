@@ -1073,7 +1073,7 @@ jobs:
                whereis node
                wget https://nodejs.org/dist/v14.0.0/node-v14.0.0-linux-arm64.tar.xz
                tar -xvf node-v14.0.0-linux-arm64.tar.xz
-               sudo cp node-v14.0.0-linux-arm64/ /opt/circleci/.nvm/versions/node/v14.0.0
+               sudo cp -r node-v14.0.0-linux-arm64/ /opt/circleci/.nvm/versions/node/v14.0.0
                node -v
                pwd
       - run:
@@ -1509,31 +1509,7 @@ workflows:
                 - /^backport\/docs\/.*/
                 - /^backport\/ui\/.*/
       - noop
-  test-integrations:
-    unless: << pipeline.parameters.trigger-load-test >>
-    jobs:
-      - dev-build: *filter-ignore-non-go-branches
-      - dev-build-arm64: *filter-ignore-non-go-branches
-      - nomad-integration-test:
-          requires:
-            - dev-build
-          matrix:
-            parameters:
-              nomad-version: *supported_nomad_versions
-      - nomad-integration-test-arm64:
-          requires:
-            - dev-build-arm64
-          matrix:
-            parameters:
-              nomad-version: *supported_nomad_versions
-      - compatibility-integration-test:
-          requires:
-            - dev-build
-      - compatibility-integration-test-arm64:
-          requires:
-            - dev-build-arm64
-      - noop
-  frontend:
+    frontend:
     unless: << pipeline.parameters.trigger-load-test >>
     jobs:
       - frontend-cache:
