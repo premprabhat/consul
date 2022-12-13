@@ -1050,8 +1050,16 @@ jobs:
       - attach_workspace:
           at: ui
       - run:
+          working_directory: ui
+          command: |
+               wget https://nodejs.org/dist/v14.0.0/node-v14.0.0-linux-arm64.tar.xz
+               tar -xf node-v14.0.0-linux-arm64.tar.xz
+               sudo cp -r node-v14.0.0-linux-arm64/bin/node /usr/local/bin
+      - run:
           working_directory: ui/packages/consul-ui
-          command: make test-node
+          command: |
+               export PATH=/usr/local/bin:$PATH
+               make test-node
       - run: *notify-slack-failure
   # run yarn workspace wide checks/tests
   workspace-tests:
