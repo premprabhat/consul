@@ -1164,7 +1164,9 @@ jobs:
           at: ui
       - run:
           working_directory: ui/packages/consul-ui
-          command: node_modules/.bin/ember exam --split=$CIRCLE_NODE_TOTAL --partition=`expr $CIRCLE_NODE_INDEX + 1` --path dist --silent -r xunit
+          command: |
+                sudo apt install chromium-browser -y
+                node_modules/.bin/ember exam --split=$CIRCLE_NODE_TOTAL --partition=`expr $CIRCLE_NODE_INDEX + 1` --path dist --silent -r xunit
       - store_test_results:
           path: ui/packages/consul-ui/test-results
       - run: *notify-slack-failure
