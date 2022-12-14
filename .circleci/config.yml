@@ -1612,3 +1612,9 @@ workflows:
       - ember-build-ent-arm64:
           requires:
             - frontend-cache-arm64
+      - ember-test-oss:
+          requires:
+            - ember-build-oss
+      - ember-test-oss-arm64:
+          requires:
+            - ember-build-oss-arm64
