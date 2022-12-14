@@ -1617,6 +1617,12 @@ workflows:
       - ember-test-oss:
           requires:
             - ember-build-oss
-      - ember-test-oss-arm64:
+      #- ember-test-oss-arm64:
+      #    requires:
+      #      - ember-build-oss-arm64
+      - ember-test-ent:
           requires:
-            - ember-build-oss-arm64
+            - ember-build-ent
+      - ember-test-ent-arm64:
+          requires:
+            - ember-build-ent-arm64
