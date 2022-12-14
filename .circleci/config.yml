@@ -1191,7 +1191,7 @@ jobs:
       - store_test_results:
           path: ui/packages/consul-ui/test-results
       - run: *notify-slack-failure
-  ember-test-ent:
+  ember-test-ent-arm64:
     machine:
       image: *UBUNTU_CI_IMAGE
     resource_class: arm.large
