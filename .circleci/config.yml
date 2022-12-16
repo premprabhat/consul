@@ -1647,3 +1647,8 @@ workflows:
       - ember-test-ent-arm64:
           requires:
             - ember-build-ent-arm64
+  load-test:
+    when: << pipeline.parameters.trigger-load-test >>
+    jobs:
+      - load-test
+      - load-test-arm64
