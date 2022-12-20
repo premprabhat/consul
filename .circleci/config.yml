@@ -1299,8 +1299,10 @@ jobs:
             sudo tar -C /usr/local -xzvf go${GO_VERSION}.linux-arm64.tar.gz
           environment:
             <<: *ENVIRONMENT
+      - run: uname -m
       - run: *install-gotestsum
       - run: docker build -t consul:local -f ./build-support/docker/Consul-Dev.dockerfile .
+      - run: docker image inspect consul:local
       - run:
           name: Compatibility Integration Tests
           command: |
@@ -1666,61 +1668,77 @@ workflows:
                 - /^backport\/docs\/.*/
                 - /^backport\/ui\/.*/
       - noop
-  frontend:
+  test-integrations:
     unless: << pipeline.parameters.trigger-load-test >>
     jobs:
-      - frontend-cache:
+      - dev-build: *filter-ignore-non-go-branches
+      - dev-build-arm64: *filter-ignore-non-go-branches
+      - dev-upload-s3: &dev-upload
+          requires:
+            - dev-build
           filters:
             branches:
-              only:
-                - main
-                - /^ui\/.*/
-                - /^backport\/ui\/.*/
-      - frontend-cache-arm64:
-          filters:
-            branches:
-              only:
-                - main
-                - /^ui\/.*/
-                - /^backport\/ui\/.*/
-      - workspace-tests:
+              ignore:
+                - /^pull\/.*$/ # only push dev builds from non forks
+                - main # all main dev uploads will include a UI rebuild in build-distros
+  - compatibility-integration-test-arm64:
           requires:
-            - frontend-cache
-      - workspace-tests-arm64:
-          requires:
-            - frontend-cache-arm64
-      - node-tests:
-          requires:
-            - frontend-cache
-      - node-tests-arm64:
-          requires:
-            - frontend-cache-arm64
-      - ember-build-oss:
-          requires:
-            - frontend-cache
-      - ember-build-oss-arm64:
-          requires:
-            - frontend-cache-arm64
-      - ember-build-ent:
-          requires:
-            - frontend-cache
-      - ember-build-ent-arm64:
-          requires:
-            - frontend-cache-arm64
-      - ember-test-oss:
-          requires:
-            - ember-build-oss
+            - dev-build-arm64
+  #frontend:
+  #  unless: << pipeline.parameters.trigger-load-test >>
+  #  jobs:
+  #    - frontend-cache:
+  #        filters:
+  #          branches:
+  #            only:
+  #              - main
+  #              - /^ui\/.*/
+  #              - /^backport\/ui\/.*/
+  #    - frontend-cache-arm64:
+  #        filters:
+  #          branches:
+  #            only:
+  #              - main
+  #              - /^ui\/.*/
+  #              - /^backport\/ui\/.*/
+  #    - workspace-tests:
+  #        requires:
+  #          - frontend-cache
+  #    - workspace-tests-arm64:
+  #        requires:
+  #          - frontend-cache-arm64
+  #    - node-tests:
+  #        requires:
+  #          - frontend-cache
+  #    - node-tests-arm64:
+  #        requires:
+  #          - frontend-cache-arm64
+  #    - ember-build-oss:
+  #        requires:
+  #          - frontend-cache
+  #    - ember-build-oss-arm64:
+  #        requires:
+  #          - frontend-cache-arm64
+  #    - ember-build-ent:
+  #        requires:
+  #          - frontend-cache
+  #    - ember-build-ent-arm64:
+  #        requires:
+  #          - frontend-cache-arm64
+  #    - ember-test-oss:
+  #        requires:
+  #          - ember-build-oss
       #- ember-test-oss-arm64:
       #    requires:
       #      - ember-build-oss-arm64
-      - ember-test-ent:
-          requires:
-            - ember-build-ent
+  #    - ember-test-ent:
+  #        requires:
+  #          - ember-build-ent
       #- ember-test-ent-arm64:
       #    requires:
       #      - ember-build-ent-arm64
-  load-test:
-    when: << pipeline.parameters.trigger-load-test >>
-    jobs:
-      - load-test
-      - load-test-arm64
+  #load-test:
+   # when: << pipeline.parameters.trigger-load-test >>
+   # jobs:
+   #   - load-test
+   #   - load-test-arm64
