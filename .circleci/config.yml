@@ -1676,6 +1676,7 @@ workflows:
       - dev-upload-s3: &dev-upload
           requires:
             - dev-build
+            - dev-build-arm64
           filters:
             branches:
               ignore:
