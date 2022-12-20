@@ -188,7 +188,7 @@ ci.dev-docker:
 	@echo "Pulling consul container image - $(CONSUL_IMAGE_VERSION)"
 	@docker pull consul:$(CONSUL_IMAGE_VERSION) >/dev/null
 	@echo "Building Consul Development container - $(CI_DEV_DOCKER_IMAGE_NAME)"
-	@docker build $(NOCACHE) $(QUIET) -t '$(CI_DEV_DOCKER_NAMESPACE)/$(CI_DEV_DOCKER_IMAGE_NAME):$(GIT_COMMIT)' \
+	@docker buildx use default && docker buildx build $(NOCACHE) $(QUIET) -t '$(CI_DEV_DOCKER_NAMESPACE)/$(CI_DEV_DOCKER_IMAGE_NAME):$(GIT_COMMIT)' \
 	--build-arg CONSUL_IMAGE_VERSION=$(CONSUL_IMAGE_VERSION) \
 	--label COMMIT_SHA=$(CIRCLE_SHA1) \
 	--label PULL_REQUEST=$(CIRCLE_PULL_REQUEST) \
