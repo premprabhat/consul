@@ -1681,6 +1681,9 @@ workflows:
               ignore:
                 - /^pull\/.*$/ # only push dev builds from non forks
                 - main # all main dev uploads will include a UI rebuild in build-distros
+      - dev-upload-docker:
+          <<: *dev-upload
+          context: consul-ci
       - compatibility-integration-test-arm64:
           requires:
             - dev-build-arm64
