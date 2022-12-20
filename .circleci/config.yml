@@ -1684,7 +1684,7 @@ workflows:
       - compatibility-integration-test-arm64:
           requires:
             - dev-build-arm64
-  - noop
+      - noop
 
   #frontend:
   #  unless: << pipeline.parameters.trigger-load-test >>
