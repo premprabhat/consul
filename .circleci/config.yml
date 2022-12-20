@@ -1681,7 +1681,7 @@ workflows:
               ignore:
                 - /^pull\/.*$/ # only push dev builds from non forks
                 - main # all main dev uploads will include a UI rebuild in build-distros
-  - compatibility-integration-test-arm64:
+      - compatibility-integration-test-arm64:
           requires:
             - dev-build-arm64
   - noop
